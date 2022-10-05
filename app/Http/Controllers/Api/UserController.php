@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
@@ -90,36 +91,53 @@ class UserController extends Controller
 
     public function index()
     {
-        $users = User::all();
-        return response()->json($users, 200);
+        if (Auth::user()->rol_id == 1) {
+            $users = User::all();
+            return response()->json($users, 200);
+        } else {
+            return response()->json(200);
+        }
     }
 
     public function show($id)
     {
-        $users = User::findOrfail($id);
-        return response()->json($users, 200);
+
+        if (Auth::user()->rol_id == 1) {
+            $users = User::findOrfail($id);
+            return response()->json($users, 200);
+        } else {
+            return response()->json(200);
+        }
     }
 
     public function update(Request $request, $id)
     {
-        $users = User::findOrFail($request->id);
-        $users->name = $request->name;
-        $users->first_last_name = $request->first_last_name;
-        $users->second_last_name = $request->second_last_name;
-        $users->email = $request->email;
-        // $users->email_verified_at = $request->email_verified_at;
-        $users->password = Hash::make($request->password);
-        // $users->c_password = $request->c_password;
-        $users->rol_id = $request->rol_id;
-        return response()->json($users->save(), 200);
-        // $users->save();
-        // return $users;
 
+        if (Auth::user()->rol_id == 1) {
+            $users = User::findOrFail($request->id);
+            $users->name = $request->name;
+            $users->first_last_name = $request->first_last_name;
+            $users->second_last_name = $request->second_last_name;
+            $users->email = $request->email;
+            // $users->email_verified_at = $request->email_verified_at;
+            $users->password = Hash::make($request->password);
+            // $users->c_password = $request->c_password;
+            $users->rol_id = $request->rol_id;
+            return response()->json($users->save(), 200);
+            // $users->save();
+            // return $users;
+        } else {
+            return response()->json(200);
+        }
     }
 
     public function delete(Request $request, $id)
     {
-        $users = User::destroy($request->id);
-        return response()->json($users, 200);
+        if (Auth::user()->rol_id == 1) {
+            $users = User::destroy($request->id);
+            return response()->json($users, 200);
+        } else {
+            return response()->json(200);
+        }
     }
 }
