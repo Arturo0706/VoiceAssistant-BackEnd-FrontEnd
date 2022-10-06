@@ -24,6 +24,9 @@ class User extends Authenticatable
         'rol_id'
 
     ];
+    const ADMIN = 1;
+    const CLIENTE = 2;
+    
 
     /**
      * The attributes that should be hidden for serialization.

@@ -7,8 +7,9 @@ use Illuminate\Http\Request;
 use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
+use App\Http\Controllers\ApiController;
 
-class UserController extends Controller
+class UserController extends ApiController
 {
     public function register(Request $request)
     {
@@ -18,7 +19,7 @@ class UserController extends Controller
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required|confirmed',
-            'rol_id' => 'integer|required'
+            // 'rol_id' => 'integer|required'
         ]);
 
         $user = new User();
@@ -27,15 +28,14 @@ class UserController extends Controller
         $user->second_last_name = $request->second_last_name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
-        $user->rol_id = $request->rol_id;
+        $user->rol_id = User::CLIENTE;
 
         $user->save();
+        $token = $user->createToken("auth_token")->plainTextToken;
 
-        return response()->json([
-            "status" => 1,
-            "msg" => "¡Alta de usuario con éxito!"
-        ]);
+        return $this->successResponse(["data" => $user, "token" => $token]);
     }
+
     public function login(Request $request)
     {
         $request->validate([
@@ -50,30 +50,29 @@ class UserController extends Controller
 
                 $token = $user->createToken("auth_token")->plainTextToken;
                 //If all the parametres are correct we're gonna return an answer OK!
-                return response()->json([
-                    "status" => 1,
-                    "msg" => "¡Usuario logeado exitosamente. Bienvenido!",
-                    "access_token" => $token
-                ], 200);
+
+                return $this->successResponse([
+                    "Access_token" => $token,
+                    "Mensaje" => "¡Usuario logeado exitosamente. Bienvenido!",
+                ]);
             } else {
+
                 //If the email and the password are incorrect we can't create the token
-                return response()->json([
-                    "status" => 0,
-                    "msg" => "¡Hubo un error. Favor de verificar los parámetros!"
-                ], 404);
+
+                return $this->errorResponse([
+                    "Mensaje" => "¡Hubo un error. Favor de verificar los parámetros!",
+                ]);
             }
         } else {
-            return response()->json([
-                "status" => 0,
-                "msg" => "¡El usuario ingresado no ha sido registrado!"
-            ], 404);
+            return $this->errorResponse([
+                "mensaje" => "¡El usuario ingresado no ha sido registrado!",
+            ]);
         }
     }
     public function userProfile()
     {
-        return response()->json([
-            "status" => 0,
-            "msg" => "Acerca del perfil del usuario",
+        return $this->showMessage([
+            "Mensaje" => "Acerca del perfil del usuario!",
             "data" => auth()->user(),
         ]);
     }
@@ -81,10 +80,8 @@ class UserController extends Controller
     {
         auth()->user()->tokens()->delete();
 
-
-        return response()->json([
-            "status" => 1,
-            "msg" => "¡Sesión cerrada con éxito!",
+        return $this->showMessage([
+            "Mensaje" => "¡Sesión cerrada con éxito!",
         ]);
     }
 
@@ -93,20 +90,26 @@ class UserController extends Controller
     {
         if (Auth::user()->rol_id == 1) {
             $users = User::all();
-            return response()->json($users, 200);
+            return $this->successResponse([
+                "data" => $users,
+                "Mensaje" => "Usuario Admin",
+            ]);
         } else {
-            return response()->json(200);
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
         }
     }
 
     public function show($id)
     {
-
         if (Auth::user()->rol_id == 1) {
             $users = User::findOrfail($id);
-            return response()->json($users, 200);
+            return $this->showOne($users);
         } else {
-            return response()->json(200);
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
         }
     }
 
@@ -122,12 +125,16 @@ class UserController extends Controller
             // $users->email_verified_at = $request->email_verified_at;
             $users->password = Hash::make($request->password);
             // $users->c_password = $request->c_password;
-            $users->rol_id = $request->rol_id;
-            return response()->json($users->save(), 200);
-            // $users->save();
-            // return $users;
+            // $users->rol_id = $request->rol_id;
+            return $this->successResponse([
+                "Mensaje" => "¡Usuario actualizado con éxito!",
+                $users->save(),200
+            ]);
+            // return response()->json($users->save(), 200);
         } else {
-            return response()->json(200);
+            return $this->errorResponse([
+                "Mensaje" => "Hubo un error.",
+            ]);
         }
     }
 
@@ -135,9 +142,14 @@ class UserController extends Controller
     {
         if (Auth::user()->rol_id == 1) {
             $users = User::destroy($request->id);
-            return response()->json($users, 200);
+            return $this->successResponse([
+                "Mensaje" => "¡Usuario eliminado con éxito!",
+                "Usuario eliminado:"=>$users,
+            ]);
         } else {
-            return response()->json(200);
+            return $this->errorResponse([
+                "Mensaje" => "Hubo un error.",
+            ]);
         }
     }
 }
