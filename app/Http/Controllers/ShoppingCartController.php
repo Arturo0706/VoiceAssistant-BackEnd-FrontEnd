@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\ShoppingCart;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreShoppingCartRequest;
 use App\Http\Requests\UpdateShoppingCartRequest;
+use App\Http\Controllers\ApiController;
 
-class ShoppingCartController extends Controller
+class ShoppingCartController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +18,10 @@ class ShoppingCartController extends Controller
      */
     public function index()
     {
-        //
+        $shoppingCart = ShoppingCart::all();
+        return $this->successResponse([
+            "data" => $shoppingCart,
+        ]);
     }
 
     /**
@@ -34,9 +40,19 @@ class ShoppingCartController extends Controller
      * @param  \App\Http\Requests\StoreShoppingCartRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreShoppingCartRequest $request)
+    public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $shoppingCart = new ShoppingCart;
+            $shoppingCart->total = $request->total;
+            $shoppingCart->save();
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
+        $shoppingCart = new ShoppingCart;
+        $shoppingCart->save();
     }
 
     /**
@@ -45,9 +61,16 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\ShoppingCart  $shoppingCart
      * @return \Illuminate\Http\Response
      */
-    public function show(ShoppingCart $shoppingCart)
+    public function show(ShoppingCart $shoppingCart, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $shoppingCart = ShoppingCart::findOrfail($id);
+            return $this->showOne($shoppingCart);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -68,9 +91,20 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\ShoppingCart  $shoppingCart
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateShoppingCartRequest $request, ShoppingCart $shoppingCart)
+    public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $shoppingCart = ShoppingCart::findOrFail($request->id);
+            $shoppingCart->total = $request->total;
+            return $this->successResponse([
+                "Mensaje" => "¡Actualizado con éxito!",
+                $shoppingCart->save(), 200
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -79,8 +113,17 @@ class ShoppingCartController extends Controller
      * @param  \App\Models\ShoppingCart  $shoppingCart
      * @return \Illuminate\Http\Response
      */
-    public function destroy(ShoppingCart $shoppingCart)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $shoppingCart = ShoppingCart::destroy($request->id);
+            return $this->successResponse([
+                "Mensaje" => "¡Eliminado con éxito!",
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 }

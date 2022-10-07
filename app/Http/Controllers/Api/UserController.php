@@ -18,7 +18,7 @@ class UserController extends ApiController
             'first_last_name' => 'required|string',
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
-            'password' => 'required|confirmed',
+            'password' => 'required',
             // 'rol_id' => 'integer|required'
         ]);
 
@@ -94,6 +94,7 @@ class UserController extends ApiController
                 "data" => $users,
                 "Mensaje" => "Usuario Admin",
             ]);
+
         } else {
             return $this->errorResponse([
                 "Mensaje" => "Usuario no permitido",

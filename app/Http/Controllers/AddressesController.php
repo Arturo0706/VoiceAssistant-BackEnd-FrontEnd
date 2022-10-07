@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Addresses;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreAddressesRequest;
 use App\Http\Requests\UpdateAddressesRequest;
+use App\Http\Controllers\ApiController;
 
-class AddressesController extends Controller
+class AddressesController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +18,10 @@ class AddressesController extends Controller
      */
     public function index()
     {
-        //
+        $addresses = Addresses::all();
+        return $this->successResponse([
+            "data" => $addresses,
+        ]);
     }
 
     /**
@@ -34,9 +40,24 @@ class AddressesController extends Controller
      * @param  \App\Http\Requests\StoreAddressesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreAddressesRequest $request)
+    public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $addresses = new Addresses;
+            $addresses->suburb =$request->suburb;
+            $addresses->street =$request-> street;
+            $addresses->streer_numer=$request->streer_numer;
+            $addresses->home_numer =$request->home_numer;
+            $addresses->references =$request->references;
+            $addresses->phone =$request->phone;
+            return $this->successResponse([
+                "Mensaje" => "¡Creado exitosamente!",
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -45,9 +66,16 @@ class AddressesController extends Controller
      * @param  \App\Models\Addresses  $addresses
      * @return \Illuminate\Http\Response
      */
-    public function show(Addresses $addresses)
+    public function show(Addresses $addresses, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $addresses = Addresses::findOrfail($id);
+            return $this->showOne($addresses);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -68,9 +96,25 @@ class AddressesController extends Controller
      * @param  \App\Models\Addresses  $addresses
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateAddressesRequest $request, Addresses $addresses)
+    public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $addresses = Addresses::findOrFail($request->id);
+            $addresses->suburb =$request->suburb;
+            $addresses->street =$request-> street;
+            $addresses->streer_numer=$request->streer_numer;
+            $addresses->home_numer =$request->home_numer;
+            $addresses->references =$request->references;
+            $addresses->phone =$request->phone;
+            return $this->successResponse([
+                "Mensaje" => "¡Actualizado con éxito!",
+                $addresses->save(), 200
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -79,8 +123,17 @@ class AddressesController extends Controller
      * @param  \App\Models\Addresses  $addresses
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Addresses $addresses)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $addresses = Addresses::destroy($request->id);
+            return $this->successResponse([
+                "Mensaje" => "¡Eliminado con éxito!",
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 }

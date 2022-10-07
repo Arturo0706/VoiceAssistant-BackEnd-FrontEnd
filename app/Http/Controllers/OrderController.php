@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Order;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreOrderRequest;
 use App\Http\Requests\UpdateOrderRequest;
+use App\Http\Controllers\ApiController;
 
-class OrderController extends Controller
+class OrderController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +18,10 @@ class OrderController extends Controller
      */
     public function index()
     {
-        //
+        $order = Order::all();
+        return $this->successResponse([
+            "data" => $order,
+        ]);
     }
 
     /**
@@ -25,7 +31,6 @@ class OrderController extends Controller
      */
     public function create()
     {
-        //
     }
 
     /**
@@ -34,9 +39,18 @@ class OrderController extends Controller
      * @param  \App\Http\Requests\StoreOrderRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreOrderRequest $request)
+    public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $order = new Order;
+            $order->status = $request->status;
+            $order->subtotal = $request->subtotal;
+            $order->save();
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -45,9 +59,16 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function show(Order $order)
+    public function show(Order $order, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $order = Order::findOrfail($id);
+            return $this->showOne($order);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -68,9 +89,21 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateOrderRequest $request, Order $order)
+    public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $order = Order::findOrFail($request->id);
+            $order->status = $request->status;
+            $order->subtotal = $request->subtotal;
+            return $this->successResponse([
+                "Mensaje" => "¡Actualizado con éxito!",
+                $order->save(), 200
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -79,8 +112,17 @@ class OrderController extends Controller
      * @param  \App\Models\Order  $order
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Order $order)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $order = Order::destroy($request->id);
+            return $this->successResponse([
+                "Mensaje" => "¡Eliminado con éxito!",
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 }

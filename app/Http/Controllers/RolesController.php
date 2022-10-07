@@ -3,10 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Roles;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreRolesRequest;
 use App\Http\Requests\UpdateRolesRequest;
+use App\Http\Controllers\ApiController;
 
-class RolesController extends Controller
+class RolesController extends ApiController
 {
     /**
      * Display a listing of the resource.
@@ -15,7 +18,10 @@ class RolesController extends Controller
      */
     public function index()
     {
-        //
+        $roles = Roles::all();
+        return $this->successResponse([
+            "data" => $roles,
+        ]);
     }
 
     /**
@@ -34,9 +40,17 @@ class RolesController extends Controller
      * @param  \App\Http\Requests\StoreRolesRequest  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(StoreRolesRequest $request)
+    public function store(Request $request)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $roles = new Roles;
+            $roles->name = $request->name;
+            $roles->save();
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -45,9 +59,16 @@ class RolesController extends Controller
      * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function show(Roles $roles)
+    public function show(Roles $roles, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $roles = Roles::findOrfail($id);
+            return $this->showOne($roles);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -68,9 +89,20 @@ class RolesController extends Controller
      * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function update(UpdateRolesRequest $request, Roles $roles)
+    public function update(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $roles = Roles::findOrFail($request->id);
+            $roles->name = $request->name;
+            return $this->successResponse([
+                "Mensaje" => "¡Actualizado con éxito!",
+                $roles->save(), 200
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 
     /**
@@ -79,8 +111,17 @@ class RolesController extends Controller
      * @param  \App\Models\Roles  $roles
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Roles $roles)
+    public function destroy(Request $request, $id)
     {
-        //
+        if (Auth::user()->rol_id == 1) {
+            $roles = Roles::destroy($request->id);
+            return $this->successResponse([
+                "Mensaje" => "¡Eliminado con éxito!",
+            ]);
+        } else {
+            return $this->errorResponse([
+                "Mensaje" => "Usuario no permitido",
+            ]);
+        }
     }
 }
