@@ -11,6 +11,29 @@ use App\Http\Controllers\ApiController;
 
 class UserController extends ApiController
 {
+    public function storeAdmin(Request $request){
+        $request->validate([
+            'name' => 'required|string',
+            'first_last_name' => 'required|string',
+            'second_last_name' => 'required|string',
+            'email' => 'required|string|email|unique:users',
+            'password' => 'required',
+        ]);
+        $user = new User();
+        $user->name = $request->name;
+        $user->first_last_name = $request->first_last_name;
+        $user->second_last_name = $request->second_last_name;
+        $user->email = $request->email;
+        $user->password = Hash::make($request->password);
+        $user->rol_id = User::ADMIN;
+
+        $user->save();
+        $token = $user->createToken("auth_token")->plainTextToken;
+
+        return $this->successResponse(["data" => $user, "token" => $token]);
+
+    }
+
     public function register(Request $request)
     {
         $request->validate([
@@ -19,7 +42,6 @@ class UserController extends ApiController
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required',
-            // 'rol_id' => 'integer|required'
         ]);
 
         $user = new User();
@@ -29,6 +51,7 @@ class UserController extends ApiController
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
         $user->rol_id = User::CLIENTE;
+
 
         $user->save();
         $token = $user->createToken("auth_token")->plainTextToken;
