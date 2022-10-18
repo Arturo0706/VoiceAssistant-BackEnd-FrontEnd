@@ -17,6 +17,7 @@ use App\Http\Controllers\ProductController;
 
 Route::post('register', [UserController::class, 'register']);
 Route::post('login', [UserController::class, 'login']);
+Route::post('/roles_store', [RolesController::class, 'store']);
 
 //This endpoint will be a store method to the admin user
 Route::post('/users_admin_store', [UserController::class, 'storeAdmin']);
