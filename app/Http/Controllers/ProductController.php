@@ -20,9 +20,11 @@ class ProductController extends ApiController
     public function index()
     {
         $product = Product::all();
-        return $this->successResponse([
-            "data" => $product,
-        ]);
+        return $product;
+        // return $this->successResponse([
+        //     $product,
+        //     // "data" => $product,
+        // ]);
     }
 
     /**

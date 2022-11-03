@@ -27,7 +27,8 @@ Route::post('/users_admin_store', [UserController::class, 'storeAdmin']);
 Route::group(['middleware' => ["auth:sanctum"]], function () {
 
     Route::get('user-profile', [UserController::class, 'userProfile']);
-    Route::get('logout', [UserController::class, 'logout']);
+    Route::post('/logout', [UserController::class, 'logout']);
+    // Route::post('/logout', [Auth\AuthController::class, 'logout']);
 
     //**********Routes User */
     //Get all the users: INDEX

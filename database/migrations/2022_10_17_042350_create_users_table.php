@@ -21,14 +21,18 @@ class CreateUsersTable extends Migration
             $table->string('email')->unique();
             // $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->string('phone');
             // $table->rememberToken();
+            // $table->text('avatar');
 
-           
-
+        
             //Foreign keys
                 //** Roles Table**/
                 $table->unsignedBigInteger('rol_id');
                 $table->foreign('rol_id')->references('id')->on('roles');
+
+                // $table->unsignedBigInteger('address_id');
+                // $table->foreign('address_id')->references('id')->on('addresses');
 
                 $table->timestamps();
         });

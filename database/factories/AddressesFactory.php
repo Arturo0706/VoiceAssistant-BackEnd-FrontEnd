@@ -22,10 +22,10 @@ class AddressesFactory extends Factory
             'street_numer' => $this->faker->buildingNumber,
             'home_number' => $this->faker->buildingNumber,
             'references' => $this->faker->text,
-            'phone' => $this->faker->buildingNumber,
-            'state_id' => States::inRandomOrder()->first(),
+            // 'phone' => $this->faker->buildingNumber,
+            // 'state_id' => States::inRandomOrder()->first(),
             'municipality_id' => Municipalities::inRandomOrder()->first(),
-            'user_id' => User::inRandomOrder()->first(),
+            // 'user_id' => User::inRandomOrder()->first(),
         
         ];
     }

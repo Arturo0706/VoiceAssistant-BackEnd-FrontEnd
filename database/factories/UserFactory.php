@@ -6,6 +6,7 @@ namespace Database\Factories;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Illuminate\Support\Str;
 use App\Models\Roles;
+use App\Models\Addresses;
 
 class UserFactory extends Factory
 {
@@ -22,9 +23,12 @@ class UserFactory extends Factory
             'second_last_name' => $this->faker->lastName(),
             'email' => $this->faker->unique()->safeEmail(),
             // 'email_verified_at' => now(),
-            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', // password
+            'password' => '$2y$10$92IXUNpkjO0rOQ5byMi.Ye4oKoEa3Ro9llC/.og/at2.uheWG/igi', 
+            'phone' => $this->faker->lastName() ,// password
+            // 'avatar' => $this->faker->imageUrl($width = 640, $height = 480),
             // 'remember_token' => Str::random(10),
             'rol_id' => Roles::inRandomOrder()->first(),
+            // 'address_id' => Addresses::inRandomOrder()->first(),
         ];
     }
 

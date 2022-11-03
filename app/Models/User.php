@@ -23,7 +23,8 @@ class User extends Authenticatable
         'second_last_name',
         'email',
         'password',
-        'rol_id'
+        'rol_id',
+        'address_id'
 
     ];
     const ADMIN = 1;
@@ -50,10 +51,11 @@ class User extends Authenticatable
     ];
 
     //1:N
-    public function address()
-    {
-        return $this->hasMany(Addresses::class);
-    }
+  
+ public function addresses()
+ {
+     return $this->belongsTo(User::class);
+ }
 
     //1:N
     public function order()
@@ -66,6 +68,12 @@ class User extends Authenticatable
     {
         return $this->belongsTo(Roles::class);
     }
+
+    // protected $appends = ['avatar'];
+
+    // public function getAvatarAtribute(){
+    //     return "https://www.gravatar.com/avatar/" . md5( strtolower( trim( $this -> email)));
+    // }
 
 
 }

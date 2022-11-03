@@ -8,6 +8,8 @@ use App\Models\User;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\ApiController;
+use App\Models\Addresses;
+use App\Models\Roles;
 
 class UserController extends ApiController
 {
@@ -18,6 +20,8 @@ class UserController extends ApiController
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required',
+            'phone'=> 'required|between:9,11',
+            // 'address_id' => 'required'
         ]);
         $user = new User();
         $user->name = $request->name;
@@ -25,12 +29,23 @@ class UserController extends ApiController
         $user->second_last_name = $request->second_last_name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->phone = $request->phone;
+        // $user->address_id = $request->address_id;
         $user->rol_id = User::ADMIN;
+       
 
         $user->save();
         $token = $user->createToken("auth_token")->plainTextToken;
 
-        return $this->successResponse(["data" => $user, "token" => $token]);
+        return $this->successResponse([
+            "data" => $user, 
+            "access_token" => $token,
+            "rol"=> $user = Roles::find($user->rol_id),
+            // "direccion" => $user = Addresses::find($user->address_id)
+           
+          
+        ]);
+      
 
     }
 
@@ -42,6 +57,8 @@ class UserController extends ApiController
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required',
+            
+            // 'address_id' => 'required',
         ]);
 
         $user = new User();
@@ -50,13 +67,19 @@ class UserController extends ApiController
         $user->second_last_name = $request->second_last_name;
         $user->email = $request->email;
         $user->password = Hash::make($request->password);
+        $user->phone = $request->phone;
+        // $user->address_id = $request->address_id;
         $user->rol_id = User::CLIENTE;
-
+       
 
         $user->save();
         $token = $user->createToken("auth_token")->plainTextToken;
 
-        return $this->successResponse(["data" => $user, "token" => $token]);
+        return $this->successResponse([
+            "data" => $user, 
+            "access_token" => $token,
+            "rol"=> $user = Roles::find($user->rol_id),
+        ]);
     }
 
     public function login(Request $request)
@@ -75,8 +98,12 @@ class UserController extends ApiController
                 //If all the parametres are correct we're gonna return an answer OK!
 
                 return $this->successResponse([
-                    "Access_token" => $token,
+                    "access_token" => $token,
                     "Mensaje" => "¡Usuario logeado exitosamente. Bienvenido!",
+                    "user" => $user, 
+                   "rol"=> $user = Roles::find($user->rol_id),
+                   "direccion"=> $user = Addresses::find($user->addresses_id)
+                    // "rol" => $user = Roles::find($user->rol_id),
                 ]);
             } else {
 

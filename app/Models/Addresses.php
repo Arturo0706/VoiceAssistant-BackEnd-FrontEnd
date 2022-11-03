@@ -17,7 +17,7 @@ class Addresses extends Model
         'phone',
         'state_id',
         'municipality_id',
-        'user_id'
+        // 'user_id',
     ];
 
     //N:1 
@@ -45,7 +45,7 @@ class Addresses extends Model
 
      public function user()
      {
-         return $this->belongsTo(User::class);
+         return $this->hasMany(Addresses::class);
      }
 
 

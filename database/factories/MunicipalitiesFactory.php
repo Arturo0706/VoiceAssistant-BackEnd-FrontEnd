@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Models\States;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 class MunicipalitiesFactory extends Factory
@@ -14,7 +15,8 @@ class MunicipalitiesFactory extends Factory
     public function definition()
     {
         return [
-            'name' => $this->faker->city
+            'name' => $this->faker->city,
+            'state_id' => States::inRandomOrder()->first(),
         ];
     }
 }

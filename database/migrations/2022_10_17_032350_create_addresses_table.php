@@ -20,20 +20,18 @@ class CreateAddressesTable extends Migration
             $table->integer('street_numer');
             $table->integer('home_number');
             $table->text('references');
-            $table->integer('phone');
-
             //Foreign keys
                 //** States table **/
-                $table->unsignedBigInteger('state_id');
-                $table->foreign('state_id')->references('id')->on('states');
+                // $table->unsignedBigInteger('state_id');
+                // $table->foreign('state_id')->references('id')->on('states');
 
                 //** Municipalities table**/
                 $table->unsignedBigInteger('municipality_id');
                 $table->foreign('municipality_id')->references('id')->on('municipalities');
 
-                  //** Users table**/
-                  $table->unsignedBigInteger('user_id');
-                  $table->foreign('user_id')->references('id')->on('users');
+                //   //** Users table**/
+                //   $table->unsignedBigInteger('user_id');
+                //   $table->foreign('user_id')->references('id')->on('users');
 
             $table->timestamps();
         });
