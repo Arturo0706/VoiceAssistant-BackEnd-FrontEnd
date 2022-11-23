@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\StoreShoppingCartRequest;
 use App\Http\Requests\UpdateShoppingCartRequest;
 use App\Http\Controllers\ApiController;
+use App\Models\Product;
+use Illuminate\Support\Facades\DB;
 
 class ShoppingCartController extends ApiController
 {
@@ -16,6 +18,18 @@ class ShoppingCartController extends ApiController
      *
      * @return \Illuminate\Http\Response
      */
+
+    public function shoppingCart(Request $request){
+
+        $sql = "SELECT name,price FROM shopping_carts,products WHERE shopping_carts.product_id=products.id && user_id=$request->id";
+        // $sql = "SELECT * FROM shopping_carts WHERE user_id=". $request->id;
+        $detalles = DB::select($sql);
+
+        // "rol"=> $user = Roles::find($user->rol_id),
+        return $detalles;
+    }
+
+
     public function index()
     {
         $shoppingCart = ShoppingCart::all();
@@ -42,17 +56,22 @@ class ShoppingCartController extends ApiController
      */
     public function store(Request $request)
     {
-        if (Auth::user()->rol_id == 1) {
-            $shoppingCart = new ShoppingCart;
-            $shoppingCart->total = $request->total;
-            $shoppingCart->save();
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
         $shoppingCart = new ShoppingCart;
+        $shoppingCart->user_id = $request->user_id;
+        $shoppingCart->product_id = $request->product_id;
         $shoppingCart->save();
+
+        // if (Auth::user()->rol_id == 1) {
+        //     $shoppingCart = new ShoppingCart;
+        //     $shoppingCart->total = $request->total;
+        //     $shoppingCart->save();
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
+        // $shoppingCart = new ShoppingCart;
+        // $shoppingCart->save();
     }
 
     /**

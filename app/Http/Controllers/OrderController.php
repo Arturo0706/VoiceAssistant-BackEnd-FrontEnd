@@ -41,16 +41,20 @@ class OrderController extends ApiController
      */
     public function store(Request $request)
     {
-        if (Auth::user()->rol_id == 1) {
-            $order = new Order;
-            $order->status = $request->status;
-            $order->subtotal = $request->subtotal;
-            $order->save();
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        $order = new Order;
+        $order->cantidad = $request->cantidad;
+        $order->total = $request->total;
+        $order->save();
+        // if (Auth::user()->rol_id == 1) {
+        //     $order = new Order;
+        //     $order->status = $request->status;
+        //     $order->subtotal = $request->subtotal;
+        //     $order->save();
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     /**

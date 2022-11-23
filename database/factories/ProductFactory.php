@@ -17,6 +17,7 @@ class ProductFactory extends Factory
             'name' => $this->faker->safeColorName,
             'description' => $this->faker->word,
             'image' => $this->faker->imageUrl,
+            'price' => $this->faker->buildingNumber(),
 
         ];
     }

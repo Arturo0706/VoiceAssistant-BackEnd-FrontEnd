@@ -22,8 +22,8 @@ class ProductController extends ApiController
         $product = Product::all();
         return $product;
         // return $this->successResponse([
-        //     $product,
-        //     // "data" => $product,
+           
+        //     "data" => $product,
         // ]);
     }
 

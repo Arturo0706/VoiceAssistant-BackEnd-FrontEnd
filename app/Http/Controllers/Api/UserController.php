@@ -79,6 +79,7 @@ class UserController extends ApiController
             "data" => $user, 
             "access_token" => $token,
             "rol"=> $user = Roles::find($user->rol_id),
+           
         ]);
     }
 
@@ -102,7 +103,8 @@ class UserController extends ApiController
                     "Mensaje" => "¡Usuario logeado exitosamente. Bienvenido!",
                     "user" => $user, 
                    "rol"=> $user = Roles::find($user->rol_id),
-                   "direccion"=> $user = Addresses::find($user->addresses_id)
+                   "status" => 'OK'
+                //    "direccion"=> $user = Addresses::find($user->addresses_id)
                     // "rol" => $user = Roles::find($user->rol_id),
                 ]);
             } else {
@@ -138,30 +140,35 @@ class UserController extends ApiController
 
     public function index()
     {
-        if (Auth::user()->rol_id == 1) {
-            $users = User::all();
-            return $this->successResponse([
-                "data" => $users,
-                "Mensaje" => "Usuario Admin",
-            ]);
+        $users = User::all();
+        return $users;
+        // if (Auth::user()->rol_id == 1) {
+        //     $users = User::all();
+        //     return $users;
+        //     // return $this->successResponse([
+        //     //     "data" => $users,
+        //     //     "Mensaje" => "Usuario Admin",
+        //     // ]);
 
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     public function show($id)
     {
-        if (Auth::user()->rol_id == 1) {
-            $users = User::findOrfail($id);
-            return $this->showOne($users);
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        $users = User::findOrfail($id);
+        return $this->showOne($users);
+        // if (Auth::user()->rol_id == 1) {
+        //     $users = User::findOrfail($id);
+        //     return $this->showOne($users);
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     public function update(Request $request, $id)
@@ -173,6 +180,7 @@ class UserController extends ApiController
             $users->first_last_name = $request->first_last_name;
             $users->second_last_name = $request->second_last_name;
             $users->email = $request->email;
+            $users->phone = $request->phone;
             // $users->email_verified_at = $request->email_verified_at;
             $users->password = Hash::make($request->password);
             // $users->c_password = $request->c_password;

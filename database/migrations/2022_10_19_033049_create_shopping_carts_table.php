@@ -15,16 +15,18 @@ class CreateShoppingCartsTable extends Migration
     {
         Schema::create('shopping_carts', function (Blueprint $table) {
             $table->bigIncrements('id');
-            $table->float('total');
+            // $table->float('total');
 
                 //Foreign keys
                 //** Orders table**/
-                $table->unsignedBigInteger('order_id');
-                $table->foreign('order_id')->references('id')->on('orders');
+                $table->unsignedBigInteger('user_id');
+                $table->foreign('user_id')->references('id')->on('users');
 
                 //** Products table**/
                 $table->unsignedBigInteger('product_id');
                 $table->foreign('product_id')->references('id')->on('products');
+
+                
             $table->timestamps();
             
             

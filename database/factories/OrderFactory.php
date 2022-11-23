@@ -16,10 +16,11 @@ class OrderFactory extends Factory
     public function definition()
     {
         return [
-            'status'=> $this->faker->state,
-            'subtotal'=> $this->faker->buildingNumber,
-            'user_id' => User::inRandomOrder()->first(),
-            'address_id' => Addresses::inRandomOrder()->first(),
+            // 'status'=> $this->faker->state,
+            'cantidad'=> $this->faker->buildingNumber,
+            'total'=> $this->faker->buildingNumber,
+            // 'user_id' => User::inRandomOrder()->first(),
+            // 'address_id' => Addresses::inRandomOrder()->first(),
         ];
     }
 }
