@@ -10,6 +10,8 @@ use App\Http\Requests\UpdateProductRequest;
 use App\Http\Controllers\ApiController;
 
 
+
+
 class ProductController extends ApiController
 {
     /**
@@ -22,7 +24,7 @@ class ProductController extends ApiController
         $product = Product::all();
         return $product;
         // return $this->successResponse([
-           
+
         //     "data" => $product,
         // ]);
     }
@@ -45,17 +47,26 @@ class ProductController extends ApiController
      */
     public function store(Request $request)
     {
-        if (Auth::user()->rol_id == 1) {
-            $product = new Product;
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->image = $request->image;
-            $product->save();
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        // if (Auth::user()->rol_id == 1) {
+        $product = new Product;
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->image = $request->image;
+        $product->price = $request->price;
+        $product->save();
+
+        // // $image2 = file_get_contents($request->image2->path());
+        // // $base64Image = base64_encode($image2);
+        // // $url = $this->saveImages($base64Image, "products", $product->id);
+        // $path = $request->file('image2')->store('images','s3');
+        // $product->image()->updateOrCreate([
+        //     "url" => $product,
+        // ]);
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     /**
@@ -66,14 +77,14 @@ class ProductController extends ApiController
      */
     public function show(Product $product, $id)
     {
-        if (Auth::user()->rol_id == 1) {
-            $product = Product::findOrfail($id);
-            return $this->showOne($product);
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        // if (Auth::user()->rol_id == 1) {
+        $product = Product::findOrfail($id);
+        return $this->showOne($product);
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     /**
@@ -96,20 +107,21 @@ class ProductController extends ApiController
      */
     public function update(Request $request, $id)
     {
-        if (Auth::user()->rol_id == 1) {
-            $product = Product::findOrFail($request->id);
-            $product->name = $request->name;
-            $product->description = $request->description;
-            $product->image = $request->image;
-            return $this->successResponse([
-                "Mensaje" => "¡Actualizado con éxito!",
-                $product->save(), 200
-            ]);
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        // if (Auth::user()->rol_id == 1) {
+        $product = Product::findOrFail($request->id);
+        $product->name = $request->name;
+        $product->description = $request->description;
+        $product->image = $request->image;
+        $product->price = $request->price;
+        return $this->successResponse([
+            "Mensaje" => "¡Actualizado con éxito!",
+            $product->save(), 200
+        ]);
+        // } else {
+        // return $this->errorResponse([
+        //     "Mensaje" => "Usuario no permitido",
+        // ]);
+        // }
     }
 
     /**
@@ -120,15 +132,19 @@ class ProductController extends ApiController
      */
     public function destroy(Request $request, $id)
     {
-        if (Auth::user()->rol_id == 1) {
-            $product = Product::destroy($request->id);
-            return $this->successResponse([
-                "Mensaje" => "¡Eliminado con éxito!",
-            ]);
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+        $product = Product::destroy($request->id);
+        return $this->successResponse([
+            "Mensaje" => "¡Eliminado con éxito!",
+        ]);
+        // if (Auth::user()->rol_id == 1) {
+        //     $product = Product::destroy($request->id);
+        //     return $this->successResponse([
+        //         "Mensaje" => "¡Eliminado con éxito!",
+        //     ]);
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 }

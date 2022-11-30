@@ -57,6 +57,7 @@ class UserController extends ApiController
             'second_last_name' => 'required|string',
             'email' => 'required|string|email|unique:users',
             'password' => 'required',
+            'phone'=> 'required|between:9,11',
             
             // 'address_id' => 'required',
         ]);
@@ -99,11 +100,11 @@ class UserController extends ApiController
                 //If all the parametres are correct we're gonna return an answer OK!
 
                 return $this->successResponse([
+                    "data" => $user, 
                     "access_token" => $token,
                     "Mensaje" => "¡Usuario logeado exitosamente. Bienvenido!",
-                    "user" => $user, 
-                   "rol"=> $user = Roles::find($user->rol_id),
-                   "status" => 'OK'
+                    "rol"=> $user = Roles::find($user->rol_id),
+                    "status" => 'OK'
                 //    "direccion"=> $user = Addresses::find($user->addresses_id)
                     // "rol" => $user = Roles::find($user->rol_id),
                 ]);
@@ -141,6 +142,13 @@ class UserController extends ApiController
     public function index()
     {
         $users = User::all();
+        // "rol"=> $user = Roles::find($user->rol_id),
+
+        // return $this->successResponse([
+        //     "data" => $users, 
+        //     // "rol"=> $user = Roles::find($users->rol_id),
+           
+        // ]);
         return $users;
         // if (Auth::user()->rol_id == 1) {
         //     $users = User::all();

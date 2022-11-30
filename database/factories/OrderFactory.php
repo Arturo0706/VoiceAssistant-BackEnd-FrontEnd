@@ -19,7 +19,7 @@ class OrderFactory extends Factory
             // 'status'=> $this->faker->state,
             'cantidad'=> $this->faker->buildingNumber,
             'total'=> $this->faker->buildingNumber,
-            // 'user_id' => User::inRandomOrder()->first(),
+            'shopping_id' => User::inRandomOrder()->first(),
             // 'address_id' => Addresses::inRandomOrder()->first(),
         ];
     }

@@ -26,7 +26,7 @@ class CreateShoppingCartsTable extends Migration
                 $table->unsignedBigInteger('product_id');
                 $table->foreign('product_id')->references('id')->on('products');
 
-                
+                $table->softDeletes();
             $table->timestamps();
             
             
@@ -41,5 +41,6 @@ class CreateShoppingCartsTable extends Migration
     public function down()
     {
         Schema::dropIfExists('shopping_carts');
+        
     }
 }

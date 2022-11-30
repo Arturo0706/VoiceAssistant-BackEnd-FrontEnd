@@ -19,9 +19,10 @@ class AddressesController extends ApiController
     public function index()
     {
         $addresses = Addresses::all();
-        return $this->successResponse([
-            "data" => $addresses,
-        ]);
+        return  $addresses;
+        // return $this->successResponse([
+        //     "data" => $addresses,
+        // ]);
     }
 
     /**
@@ -42,22 +43,22 @@ class AddressesController extends ApiController
      */
     public function store(Request $request)
     {
-        if (Auth::user()->rol_id == 1) {
+        // if (Auth::user()->rol_id == 1) {
             $addresses = new Addresses;
             $addresses->suburb =$request->suburb;
             $addresses->street =$request-> street;
-            $addresses->streer_numer=$request->streer_numer;
-            $addresses->home_numer =$request->home_numer;
+            $addresses->street_numer=$request->street_numer;
+            $addresses->home_number =$request->home_number;
             $addresses->references =$request->references;
-            $addresses->phone =$request->phone;
-            return $this->successResponse([
-                "Mensaje" => "¡Creado exitosamente!",
-            ]);
-        } else {
-            return $this->errorResponse([
-                "Mensaje" => "Usuario no permitido",
-            ]);
-        }
+           
+            // return $this->successResponse([
+            //     "Mensaje" => "¡Creado exitosamente!",
+            // ]);
+        // } else {
+        //     return $this->errorResponse([
+        //         "Mensaje" => "Usuario no permitido",
+        //     ]);
+        // }
     }
 
     /**

@@ -19,9 +19,10 @@ class OrderController extends ApiController
     public function index()
     {
         $order = Order::all();
-        return $this->successResponse([
-            "data" => $order,
-        ]);
+        return $order;
+        // return $this->successResponse([
+        //     "data" => $order,
+        // ]);
     }
 
     /**
@@ -44,6 +45,7 @@ class OrderController extends ApiController
         $order = new Order;
         $order->cantidad = $request->cantidad;
         $order->total = $request->total;
+        $order->shopping_id = $request->shopping_id;
         $order->save();
         // if (Auth::user()->rol_id == 1) {
         //     $order = new Order;

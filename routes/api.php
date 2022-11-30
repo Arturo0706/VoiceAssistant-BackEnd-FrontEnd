@@ -31,7 +31,7 @@ Route::post('/order_store', [OrderController::class, 'store']);
 Route::delete('/order_delete/{id}', [OrderController::class, 'destroy']);
 
 Route::get('user-profile', [UserController::class, 'userProfile']);
-Route::post('/logout', [UserController::class, 'logout']);
+
 // Route::post('/logout', [Auth\AuthController::class, 'logout']);
 
 //**********Routes User */
@@ -113,8 +113,12 @@ Route::post('/addresses_store', [AddressesController::class, 'store']);
 Route::get('/addresses_show/{id}', [AddressesController::class, 'show']);
 Route::put('/addresses_update/{id}', [AddressesController::class, 'update']);
 Route::delete('/addresses_delete/{id}', [AddressesController::class, 'destroy']);
-Route::group(['middleware' => ["auth:sanctum"]], function () {
 
+
+
+
+Route::group(['middleware' => ["auth:sanctum"]], function () {
+    Route::post('logout', [UserController::class, 'logout']);
  
 });
 

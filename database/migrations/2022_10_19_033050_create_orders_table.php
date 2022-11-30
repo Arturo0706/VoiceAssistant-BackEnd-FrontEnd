@@ -26,6 +26,9 @@ class CreateOrdersTable extends Migration
                 //** Address table**/
                 // $table->unsignedBigInteger('address_id');
                 // $table->foreign('address_id')->references('id')->on('addresses');
+                $table->unsignedBigInteger('shopping_id');
+                $table->foreign('shopping_id')->references('id')->on('shopping_carts');
+            
 
             $table->timestamps();
             
